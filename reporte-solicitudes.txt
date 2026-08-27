@@ -1,0 +1,4 @@
+ID,SOLICITANTE,DESCRIPCION,PRIORIDAD,HORAS_ATENCION
+SOL-001,Cabo Rojas,Reponer radio,ALTA,24
+SOL-002,Sgto. Muñoz,Revisar generador,MEDIA,48
+SOL-003,Cbo. Pérez,Restablecer enlace,CRITICA,4
