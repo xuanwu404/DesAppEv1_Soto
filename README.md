@@ -4,10 +4,7 @@
 
 ## Verificación de Entorno y Pruebas
 - **Versión de Java:** `openjdk 25.0.1 2025-10-21 LTS`
-- **Ejecución de Pruebas:**
-  \`\`\`bash
-  .\mvnw.cmd clean test
-  \`\`\`
+- **Ejecución de Pruebas:** `.\mvnw.cmd clean test`
 - **Resultado:** `BUILD SUCCESS` (7 tests ejecutados y aprobados sin fallos).
 
 ## Estructura del Dominio
