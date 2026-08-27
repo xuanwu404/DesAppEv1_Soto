@@ -3,7 +3,7 @@
 **Entorno:** Java 25 (LTS) · Apache Maven 3.9.6 · JUnit 5.10.2  
 
 ## Verificación de Entorno y Pruebas
-- **Versión de Java:** `openjdk 25.0.1 2025-10-21 LTS`
+- **Versión de Java:** `openjdk 25.0.4 2026-07-21 LTS`
 - **Ejecución de Pruebas:** `.\mvnw.cmd clean test`
 - **Resultado:** `BUILD SUCCESS` (7 tests ejecutados y aprobados sin fallos).
 

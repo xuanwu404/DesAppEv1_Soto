@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class GestorSolicitudes {
@@ -16,25 +18,27 @@ public class GestorSolicitudes {
     private final List<Solicitud> solicitudes = new ArrayList<>();
 
     public void registrar(Solicitud solicitud) {
-        if (solicitud == null) {
-            throw new IllegalArgumentException("La solicitud no puede ser nula");
-        }
-        boolean existe = solicitudes.stream()
-                .anyMatch(s -> s.id().equalsIgnoreCase(solicitud.id()));
-        if (existe) {
-            throw new SolicitudDuplicadaException("Ya existe una solicitud con el id: " + solicitud.id());
-        }
-        solicitudes.add(solicitud);
+        Solicitud s = Objects.requireNonNull(solicitud, "La solicitud no puede ser nula");
+
+        solicitudes.stream()
+                .filter(existente -> existente.id().equalsIgnoreCase(s.id()))
+                .findFirst()
+                .ifPresent(duplicado -> {
+                    throw new SolicitudDuplicadaException("Ya existe una solicitud con el id: " + duplicado.id());
+                });
+
+        solicitudes.add(s);
     }
 
     public Solicitud buscarPorId(String id) {
-        if (id == null || id.isBlank()) {
-            throw new IllegalArgumentException("El id de búsqueda no puede ser nulo ni estar en blanco");
-        }
-        return solicitudes.stream()
-                .filter(s -> s.id().equalsIgnoreCase(id))
-                .findFirst()
-                .orElseThrow(() -> new NoSuchElementException("No se encontró la solicitud con id: " + id));
+        return Optional.ofNullable(id)
+                .filter(valor -> !valor.isBlank())
+                .flatMap(valorId -> solicitudes.stream()
+                        .filter(s -> s.id().equalsIgnoreCase(valorId))
+                        .findFirst())
+                .orElseThrow(() -> Optional.ofNullable(id).filter(v -> !v.isBlank()).isPresent()
+                        ? new NoSuchElementException("No se encontró la solicitud con id: " + id)
+                        : new IllegalArgumentException("El id de búsqueda no puede ser nulo ni estar en blanco"));
     }
 
     public List<Solicitud> filtrarPorPrioridad(Prioridad prioridad) {
@@ -49,10 +53,9 @@ public class GestorSolicitudes {
     }
 
     public void exportarReporte(Path destino) throws IOException {
-        if (destino == null) {
-            throw new IllegalArgumentException("La ruta de destino no puede ser nula");
-        }
-        try (BufferedWriter writer = Files.newBufferedWriter(destino, StandardCharsets.UTF_8)) {
+        Path rutaDestino = Objects.requireNonNull(destino, "La ruta de destino no puede ser nula");
+
+        try (BufferedWriter writer = Files.newBufferedWriter(rutaDestino, StandardCharsets.UTF_8)) {
             writer.write("ID,SOLICITANTE,DESCRIPCION,PRIORIDAD,HORAS_ATENCION");
             writer.newLine();
             for (Solicitud s : solicitudes) {
